@@ -44,14 +44,23 @@ def _load_psrchive(fname):
         Sampling time, in s.
 
     """
+
     archive = psrchive.Archive_load(fname)
     archive.pscrunch()
+
     # un-dedisperse
     archive.set_dispersion_measure(0.)
     archive.dedisperse()
     archive.set_dedispersed(False)
     archive.tscrunch()
-    archive.centre()
+
+    try:
+        archive.centre()
+    except RuntimeError as e:
+        print('Could not centre using ephemeris: {0}'.format(e))
+        print('Centre based on phase bin with maximum amplitude.')
+        archive.centre_max_bin()
+
     weights = archive.get_weights().squeeze()
     waterfall = np.ma.masked_array(archive.get_data().squeeze())
     waterfall[weights == 0] = np.ma.masked
