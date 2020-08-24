@@ -1186,3 +1186,9 @@ if __name__ == "__main__":
         manual_bandwidth = args.manual_bandwidth,
         no_plots=args.no_plots
     )
+
+    print('Best DM: {0:.3f} +- {1:.3f}'.format(
+        dm,
+        dm_std
+        )
+    )
